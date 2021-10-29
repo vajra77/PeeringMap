@@ -18,7 +18,7 @@ In the `tools/` directory you will find some useful tools to deal with IRR resou
 ### Requirements
 This tools requires Python 3.8 and the following packages:
 
-- simplekml
+- [simplekml](https://simplekml.readthedocs.io/en/latest/)
 
 ### Install
 From the root directory:
