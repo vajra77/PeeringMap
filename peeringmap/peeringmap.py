@@ -1,8 +1,8 @@
 from .pdb import PDBProxy, PDBNetwork, PDBFacility
 
 
-def get_network_facilities(net_id):
-    network = PDBProxy.get_network(net_id)
+def get_network_facilities(asn):
+    network = PDBProxy.get_network(asn)
     facilities = PDBProxy.get_facilities(network)
     result = []
     for fac in facilities:
