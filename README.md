@@ -12,7 +12,7 @@ Package `peeringmap.peeringmap` provides the following functions:
 In the `tools/` directory you will find some useful tools to deal with IRR resources:
 
 - **pdb2kml.py**: produces a KML file of Points of Presence (facilities) for the given AS number. 
-Usage is: `pdb2kml.py -a <as number> -f <kml-filename>`
+  Usage is: `pdb2kml.py -a <as number> -f <kml-filename>`
 
 ## Setup
 
