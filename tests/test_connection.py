@@ -1,13 +1,13 @@
-from peeringmap import PDBProxy, PDBFacility
+from peeringmap import PDBNetwork
 
 
 def test_connection():
-    net = PDBProxy.get_network(4761)
-    print(net.name)
+    net = PDBNetwork(24796)
+    assert net.retrieved
 
 def test_facilities():
-    net = PDBProxy.get_network(3838)
-    facilities = PDBProxy.get_facilities(net)
+    net = PDBNetwork(24796)
+    assert net.retrieved
 
-    for fac in facilities:
-        print("FAC: {} [{}, {}]".format(fac.name, fac.latitude, fac.longitude))
+    for loc in net.locations:
+        print("Location: {} [{}, {}]".format(loc.name, loc.latitude, loc.longitude))

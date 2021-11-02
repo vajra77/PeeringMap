@@ -1,34 +1,30 @@
+import requests
+from .pdb_object import PDBObject
+from peeringmap.geoip import GeoLocation, GeoLocatable
 
 
-class PDBFacility:
+class PDBFacility(PDBObject, GeoLocatable):
 
-    def __init__(self, id, name, lat, lon):
-        self._id = id
-        self._name = name
-        self._latitude = lat
-        self._longitude = lon
+    def __init__(self, id):
+        super().__init__(id, 'fac')
+        self.retrieve()
 
     @property
-    def id(self):
-        return self._id
+    def location(self):
+        loc = GeoLocation(
+            self._data['name'],
+            self._data['latitude'],
+            self._data['longitude']
+        )
+        return loc
 
     @property
     def name(self):
-        return self._name
+        return self._data['name']
 
-    @property
-    def longitude(self):
-        return self._longitude
-
-    @property
-    def latitude(self):
-        return self._latitude
-
-    @classmethod
-    def make_from_json(cls, data):
-        obj = data['data'][0]
-        id = obj['id']
-        name = obj['name']
-        lat = obj['latitude']
-        lon = obj['longitude']
-        return cls(id, name, lat, lon)
+    def _retrieve(self):
+        url = self.base_url + str(self._id)
+        response = requests.get(url)
+        json = response.json()
+        data = json['data'][0]
+        return data

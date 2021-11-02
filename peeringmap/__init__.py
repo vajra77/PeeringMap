@@ -1,1 +1,1 @@
-from .peeringmap import get_network_facilities
+from .peeringmap import PDBNetwork, get_network_facilities

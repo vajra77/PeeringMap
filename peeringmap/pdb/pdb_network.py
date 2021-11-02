@@ -1,38 +1,59 @@
 import requests
-import json
+from .pdb_object import PDBObject
+from .pdb_facility import PDBFacility
+from .pdb_ix import PDBIx
 
-class PDBNetwork:
 
-    def __init__(self, id, name, asn, faclist):
-        self._id = id
-        self._name = name
-        self._asn = asn
-        self._facilities = faclist
+class PDBNetwork(PDBObject):
 
-    @property
-    def id(self):
-        return self._id
+    def __init__(self, asn):
+        super().__init__(self._asn_to_id(asn), 'net')
+        self._private_facilities = []
+        self._ixp_facilities = {}
+        self.retrieve()
 
     @property
     def name(self):
-        return self._name
+        return self._data['name']
 
     @property
     def asn(self):
-        return self._asn
+        return self._data['asn']
 
     @property
-    def facilities(self):
-        return self._facilities
+    def locations(self):
+        all_locations = []
+        for pri in self.private_facilities():
+            all_locations.append(pri.location)
+        for ixp in self.ixp_facilities():
+            all_locations.append(ixp.location)
+        return all_locations
 
-    @classmethod
-    def make_from_json(cls, data):
-        obj = data['data'][0]
-        id = obj['id']
-        name = obj['name']
-        asn = obj['asn']
-        faclist = []
-        for fac in obj['netfac_set']:
-            faclist.append(fac['fac_id'])
-        return cls(id, name, asn, faclist)
+    def private_facilities(self):
+        if len(self._private_facilities) == 0:
+            for fac in self._data['netfac_set']:
+                facility = PDBFacility(fac['fac_id'])
+                self._private_facilities.append(facility)
+        return self._private_facilities.copy()
 
+    def ixp_facilities(self):
+        if len(self._ixp_facilities) == 0:
+            for lan in self._data['netixlan_set']:
+                if not lan['ix_id'] in self._ixp_facilities.keys():
+                    ix = PDBIx(lan['ix_id'])
+                    self._ixp_facilities[ix.id] = ix
+        return self._ixp_facilities.values()
+
+    def _retrieve(self):
+        url = self.base_url + str(self._id)
+        response = requests.get(url)
+        json = response.json()
+        data = json['data'][0]
+        return data
+
+    @staticmethod
+    def _asn_to_id(asn):
+        url = 'https://peeringdb.com/api/net?asn=' + str(asn)
+        response = requests.get(url).json()
+        data = response['data'][0]
+        return data['id']
