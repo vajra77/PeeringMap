@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+tools/3333.kml
+tools/seeweb.kml
+*.kml
