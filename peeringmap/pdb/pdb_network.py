@@ -25,9 +25,14 @@ class PDBNetwork(PDBObject):
         all_locations = []
         for pri in self.private_facilities():
             all_locations.append(pri.location)
-        for ixp in self.ixp_facilities():
-            all_locations.append(ixp.location)
         return all_locations
+
+    @property
+    def ixplocations(self):
+        ixp_locations = []
+        for ixp in self.ixp_facilities():
+            ixp_locations.append(ixp.location)
+        return ixp_locations
 
     def private_facilities(self):
         if len(self._private_facilities) == 0:
