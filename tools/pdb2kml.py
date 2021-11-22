@@ -1,6 +1,6 @@
 import sys,getopt
 import simplekml
-from peeringmap.peeringmap import get_network_facilities
+from peeringmap.peeringmap import get_network_facilities, get_ixp_facilities
 
 
 def usage():
@@ -34,10 +34,18 @@ def main():
         sys.exit(2)
 
     facilities = get_network_facilities(asn)
+    ixpfacilities = get_ixp_facilities(asn)
     kml = simplekml.Kml()
 
     for fac in facilities:
-        kml.newpoint(name=fac['name'], coords=[(fac['longitude'], fac['latitude'])])
+        print (fac)
+        pnt = kml.newpoint(name=fac['name'], coords=[(fac['longitude'], fac['latitude'])])
+        pnt.style.iconstyle.color = simplekml.Color.red
+
+    for ixpfac in ixpfacilities:
+        print (ixpfac)
+        pnt = kml.newpoint(name=ixpfac['name'], coords=[(ixpfac['longitude'], ixpfac['latitude'])])
+        pnt.style.iconstyle.color = simplekml.Color.blue
 
     kml.save(filename)
 

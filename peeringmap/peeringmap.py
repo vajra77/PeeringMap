@@ -13,3 +13,15 @@ def get_network_facilities(asn):
             })
      return result
 
+def get_ixp_facilities(asn):
+     net = PDBNetwork(asn)
+     result = []
+     for loc in net.ixplocations:
+         if loc.is_valid:
+            result.append({
+                'name': loc.name,
+                'latitude': loc.latitude,
+                'longitude': loc.longitude
+            })
+     return result
+
